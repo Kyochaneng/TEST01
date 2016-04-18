@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html><meta charset="UTF-8"><body>
+<h1 id="disp">I am KYO</h1>
+<script type="text/javascript">
+window.onload = function () {
+	var src = new EventSource('clock-server.php');
+
+	src.onmessage = function (e) {
+	var disp = document.getElementById('disp');
+	disp.innerHTML = e.data;
+	};
+};
+</script>
+</body></html>
