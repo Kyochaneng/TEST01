@@ -2,6 +2,9 @@
 // MIMEタイプを出力
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
+// TIME ZONEの設定
+date_default_timezone_set('Asia/Tokyo');
+
 // 現在時刻を表示
 for (;;){
 	$time = date('r');
