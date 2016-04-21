@@ -9,6 +9,7 @@ date_default_timezone_set('Asia/Tokyo');
 for (;;){
 	$time = date('r');
 	echo "data: The server time is: {$time}\n\n";
+	echo "data: The server another time is: {$time}\n\n";
 	ob_flush(); flush();
 	sleep(1);
 }

@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html><meta charset="UTF-8"><body>
-<h1 id="disp">I am KYO</h1>
-// onmessageイベントのイベントハンドラを記述
-<script type="text/javascript">
-window.onload = function () {
-	var src = new EventSource('clock-server.php');
+<!-- 
+	Server-Sent-Event のサンプルデモ
+	サーバから送付されてきたデータを下記の定義したタグに表示させる 
+-->
+<div id="disp"></div>
+<div id="mydisp2"></div>
 
+<script type="text/javascript">
+// イベント処理
+window.onload = function () {
+	// サーバである clock-server.php から送付される更新データを EventSourceでハンドリング
+	var src = new EventSource('clock-server.php');
+	// サーバから更新データが来るたびに onmessage でオブジェクト"e"に取り込み
 	src.onmessage = function (e) {
-	var disp = document.getElementById('disp');
-	disp.innerHTML = e.data;
+		// 更新データをDocument のタグである"div"に取り込んで innerHTMLで表示
+		document.getElementById("disp").innerHTML = e.data + "<br>";
+		document.getElementById("mydisp2").innerHTML = e.data + "<br>";
 	};
 };
 </script>
