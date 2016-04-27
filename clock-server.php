@@ -30,9 +30,9 @@ for(;;){
 	sleep(1);
 }
 
-// 日本時刻とドイツ時刻を送出する関数:書式"time1:time2"
+// 日本時刻とドイツ時刻を送出する関数:書式"time1@time2"
 function sendMessage($_time1, $_time2){
-	echo "data: $_time1:$_time2\n\n";
+	echo "data: $_time1@$_time2\n\n";
 	ob_flush();
 	flush();
 }
