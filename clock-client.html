@@ -8,6 +8,7 @@
 <div id="mydisp2"></div>
 
 <script type="text/javascript">
+/** オリジナルのコードを残しておく
 // イベント処理
 window.onload = function () {
 	// サーバである clock-server.php から送付される更新データを EventSourceでハンドリング
@@ -19,5 +20,37 @@ window.onload = function () {
 		document.getElementById("mydisp2").innerHTML = e.data + "<br>";
 	};
 };
+*/
+
+window.onload = function () {
+	var src = new EventSource('Clock-server.php');
+	src.onmessage = function (e){
+		data = e.data;
+		var ar = data.split("@");
+		var time0 = ar[0];
+		var time1 = ar[1];
+		document.getElementById("disp").innerHTML = time0 + "<br>";
+		document.getElementById("mydisp2").innerHTML = time1 + "<br>";
+	};
+};
+
+
+/* ちょっと onmessage を使ってみるのでいったん以下をコメントアウト
+// オリジナルコードでの onmesage ハンドラではなく addEventListener を施行
+window.onload = function setDataSource() {
+	var source = new EventSource('clock-server.php');
+	
+	source.addEventListener("message", function(e){
+		updateTime(e.data);
+	}, false);
+	function updateTime(data){
+		var ar = data.split(":");
+		var time0 = ar[0];
+		var time1 = ar[1];
+		document.getElementById("disp").innerHTML = time0 + "<br>";
+		document.getElementById("mydisp2").innerHTML = time1 + "<br>";
+	}	
+}
+*/
 </script>
 </body></html>
