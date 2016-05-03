@@ -8,27 +8,24 @@ $serverWrite = "chat-server-write.php?roomId=$roomId";
 
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8">
+
 <title>SSEチャット</title>
-<style>
-	body { background-color:#209020; color:white; }
-	h1 { background-color: black; color:white; }
-	#top { padding: 12px;
-		   border-bottom: 1px dashed black; }
-    .msg { margin: 12px; padding 8px;
-	       background-color:white; color:black; }
-    .name { color: white; padding-top: 10px; }
-	.self > .msg { border-right: 4px solid red;
-	               text-align:right; }
-	.frend > .msg { border-left: 4px solid blue; }
-</style>
-</head><body>
+<link rel="stylesheet" href="./likeLine02.css">
+
+
+</head>
+
+<body>
 <h1>SSEを使ったチャット - <?php echo $roomId ?></h1>
 
-<div id="top">名前:<input id ="name" size="8">
+<!-- 発言するときのフォーム -->
+<div id="top">名前:<input id ="name" size="13">
 本文:<input id="body" size="40">
 <button onclick="chatWrite()">発言</button></div>
 
+<!-- メッセージを表示する部分 -->
 <div id="disp"></div>
+<div id ="wrapper"></div>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -39,14 +36,37 @@ window.onload = function() {
         console.log("受け取ったよ:");
 		$("body").value = "";
 		var t = JSON.parse(e.data);
-		var block =
+
+		
+		var speaker =
 		  ($("name").value == t.name) ? "self" : "friend";
-		$("disp").innerHTML =
-		  "<div class='" + block + "'>" +
-		  "<div class='name'>" + t.logId + "." + t.name +
-		  "</div>" + "<div class='msg'>" + t.body +
-		  "</div></div>" +
-		  $("disp").innerHTML;
+        var nametag = speaker + "_name";
+
+        var body =
+          (speaker == "self") ? "right" : "left";
+        var body = body + "_balloon";
+        
+        $("disp").innerHTML =
+            "<div id ='wrapper'></div>" +
+            "<p class= '" + nametag +"' >" + t.logId + "." + t.name + "</p>" +
+        	"<div class= '" + body + "'>" + t.body + "</div></div>" +
+        	"<div class='clear_balloon'/>"　+
+        	$("disp").innerHTML;
+        	
+             
+
+		  
+//		var block = speaker + "_box";
+//		var arrow = "arrow_" + speaker;
+//		var nametag = speaker + "_name";
+//		console.log(nametag);
+		
+//		$("disp").innerHTML =
+//			"<div class='" + block + "'>" +
+//			"<p class= '" + nametag +"' >" + t.logId + "." + t.name + "</p>" +
+////          "<p class=self_name>" + t.logId + "." + t.name + "</p>" +
+//           "<div id = '" + arrow + "'>" + t.body + "</div></div>" +
+//			$("disp").innerHTML;
 	}
 }
 
