@@ -28,6 +28,12 @@ $stmt = $pdo->prepare("SELECT * FROM logs WHERE logId > ? ORDER BY logId DESC");
 
 /* 一秒毎にクライアントに送るメッセージを$logsに格納する。メッセージがない場合は
  * $logsが空でありその場合は関数outputLogsで何もされずにリターンされてくる
+ * $logsが空が続くとその間クライアントに何もレスポンスを返すことができなくなり
+ * 稼働させているシステムによっては（例えば　Herokuなど）30秒ルールの制約に
+ * ひっかかりコネクションが切れてしまう。そのため、Server-Sent-Events の仕様で
+ * コメント文（echo ":\n\n")を送出して死んでないよというaliveを知らせる。
+ * ただし、flush を忘れるとバッファに溜まるまで送出されないのですぐにフラッシュ
+ * することが重要
  */
 
 for (;;){
@@ -35,7 +41,9 @@ for (;;){
 	$logs = $stmt->fetchAll();
 	outputLogs($logs);
 	sleep(1);
-	echo ":\n\n";
+    echo ":\n\n";
+	ob_flush();
+	flush();
 }
 
 
@@ -54,19 +62,7 @@ for (;;){
  */
 function outputLogs($logs) {
 	global $lastId;
-	
-	
-/*  送るメッセージが空の場合、空のデータを送出する（echo ": \n\n")ことで
- *  レスポンスを全く返さないと言う無限ループ向けの対策をする
- *  これはこのアプリをHeroku上で動かすときの
- *  Herokuの持つ制限タイムアウト対策（３０秒何もレスポンスがない場合切断される）
- *  この機能を入れることでクライアント側にも処理が必要かと思ったが特にいらないらしい。
- * 
- */	
-	if (!$logs) {
-		echo ":\n\n";
-		return;
-	}
+	if (!$logs)	return;
 	$logs = array_reverse($logs);
 	foreach ($logs as $row) {
 		$logId = $row["logId"];
