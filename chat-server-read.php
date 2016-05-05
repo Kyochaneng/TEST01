@@ -52,7 +52,18 @@ for (;;) {
  */
 function outputLogs($logs) {
 	global $lastId;
-	if (!$logs) return;
+	
+/*  送るメッセージが空の場合、空のデータを送出する（echo ": \n\n")ことで
+ *  レスポンスを全く返さないと言う無限ループ向けの対策をする
+ *  これはこのアプリをHeroku上で動かすときの
+ *  Herokuの持つ制限タイムアウト対策（３０秒何もレスポンスがない場合切断される）
+ *  この機能を入れることでクライアント側にも処理が必要かと思ったが特にいらないらしい。
+ * 
+ */	
+	if (!$logs) {
+		echo ": \n\n";
+		return;
+	}
 	$logs = array_reverse($logs);
 	foreach ($logs as $row) {
 		$logId = $row["logId"];
