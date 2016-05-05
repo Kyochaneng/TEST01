@@ -26,16 +26,18 @@ outputLogs($logs);
  */
 $stmt = $pdo->prepare("SELECT * FROM logs WHERE logId > ? ORDER BY logId DESC");
 
-
 /* 一秒毎にクライアントに送るメッセージを$logsに格納する。メッセージがない場合は
  * $logsが空でありその場合は関数outputLogsで何もされずにリターンされてくる
  */
-for (;;) {
+
+for (;;){
 	$stmt->execute(array($lastId));
 	$logs = $stmt->fetchAll();
 	outputLogs($logs);
 	sleep(1);
+	echo ":\n\n";
 }
+
 
 /* 関数 outputLogs
  * 引数：データベース chat-XX.db に格納されているメッセージ($logs)をクライアントへ送出
@@ -52,6 +54,7 @@ for (;;) {
  */
 function outputLogs($logs) {
 	global $lastId;
+	
 	
 /*  送るメッセージが空の場合、空のデータを送出する（echo ": \n\n")ことで
  *  レスポンスを全く返さないと言う無限ループ向けの対策をする
