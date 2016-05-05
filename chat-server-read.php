@@ -61,7 +61,7 @@ function outputLogs($logs) {
  * 
  */	
 	if (!$logs) {
-		echo ": \n\n";
+		echo ":\n\n";
 		return;
 	}
 	$logs = array_reverse($logs);
